@@ -42,3 +42,13 @@ utility_meter:
     source: sensor.water_usage_liters
     cycle: monthly
 ```
+
+```yaml
+sensor:
+  - platform: template
+    sensors:
+      water_usage_liters:
+        unit_of_measurement: 'l'
+        friendly_name: 'Water Usage Liters'
+        value_template: "{{ states('counter.water_meter_count') | int }}"
+```
