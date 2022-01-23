@@ -1,0 +1,50 @@
+esphome:
+  name: watermeter_sensor
+  platform: ESP8266
+  board: d1_mini
+
+
+wifi:
+  ssid: "XXXX"
+  password: "XXXXX"
+  manual_ip:
+    static_ip: X.X.X.X
+    gateway: X.X.X.X
+    subnet: 255.255.255.0
+    dns1: X.X.X.X
+    dns2: X.X.X.X
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+
+ota:
+
+
+binary_sensor:
+  - platform: gpio
+    pin:
+      number: D2
+      mode: INPUT_PULLUP
+      inverted: true
+    filters:
+      - delayed_on: 40ms
+    name: "watermeter_water_sensor"
+    id: watermeter_water_sensor
+    on_press:
+      then:
+      - homeassistant.service:
+         service: counter.increment
+         data:
+           entity_id: counter.water_meter_count
+
+sensor:
+  - platform: pulse_counter
+    pin: D2
+    name: "watermeter_water_pulsecounter"
+    unit_of_measurement: 'l/min'
+    count_mode:
+      rising_edge: DISABLE
+      falling_edge: INCREMENT
